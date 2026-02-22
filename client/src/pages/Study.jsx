@@ -273,9 +273,9 @@ export default function Study() {
         const isExpanded = expandedItems.has(item._id);
 
         const typeColors = {
-            subject: '#2563eb',
-            chapter: '#3b82f6',
-            topic: '#f472b6'
+            subject: '#0ea5e9', // Sky blue dark
+            chapter: '#38bdf8', // Sky blue base
+            topic: '#7dd3fc'    // Sky blue light
         };
 
         return (

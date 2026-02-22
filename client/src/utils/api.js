@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-let API_BASE_URL = import.meta.env.VITE_API_URL || 'https://routine-master.onrender.com/api';
+let API_BASE_URL = import.meta.env.VITE_API_URL || 'https://routine-master-1fm3.onrender.com/api';
 
 // Support mobile/network testing by dynamically swapping localhost with the actual IP
 if (import.meta.env.DEV && API_BASE_URL.includes('localhost') && window.location.hostname !== 'localhost') {
