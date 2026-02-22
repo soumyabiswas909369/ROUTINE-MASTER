@@ -142,7 +142,7 @@ export default function TimeAnalytics() {
                                     <Tooltip
                                         contentStyle={{
                                             backgroundColor: 'rgba(15, 15, 15, 0.95)',
-                                            border: '1px solid rgba(233,30,99,0.3)',
+                                            border: '1px solid rgba(59, 130, 246,0.3)',
                                             borderRadius: '12px',
                                             color: '#f8fafc'
                                         }}
@@ -151,8 +151,8 @@ export default function TimeAnalytics() {
                                     <Bar dataKey="minutes" fill="url(#barGradient)" radius={[6, 6, 0, 0]} />
                                     <defs>
                                         <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0%" stopColor="#ec4899" stopOpacity={1} />
-                                            <stop offset="100%" stopColor="#e91e63" stopOpacity={0.6} />
+                                            <stop offset="0%" stopColor="#3b82f6" stopOpacity={1} />
+                                            <stop offset="100%" stopColor="#2563eb" stopOpacity={0.6} />
                                         </linearGradient>
                                     </defs>
                                 </BarChart>

@@ -84,7 +84,7 @@ export default function Documents() {
         }
     };
 
-    const categories = ['Medical', 'Academic', 'Personal', 'Work', 'Legal', 'Financial'];
+    const categories = ['Engineering', 'Academic', 'Personal', 'Work', 'Legal', 'Financial'];
 
     const filteredDocuments = documents.filter(doc => {
         const matchesSearch = doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -222,7 +222,7 @@ export default function Documents() {
                                 type="text"
                                 value={formData.tags}
                                 onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                                placeholder="e.g., important, exam, prescription"
+                                placeholder="e.g., important, exam, project"
                             />
                         </div>
 

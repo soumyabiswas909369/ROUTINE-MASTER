@@ -29,9 +29,9 @@
     background: var(--glass-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(233, 30, 99, 0.25);
+    border: 1px solid rgba(59, 130, 246, 0.25);
     border-radius: var(--radius-lg);
-    box-shadow: 0 4px 24px rgba(233, 30, 99, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 24px rgba(59, 130, 246, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .month-label {
@@ -51,8 +51,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: rgba(233, 30, 99, 0.12);
-    border: 1px solid rgba(233, 30, 99, 0.35);
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.35);
     border-radius: 50%;
     color: var(--color-accent-primary);
     width: 36px;
@@ -63,9 +63,9 @@
 }
 
 .month-nav-btn:hover {
-    background: rgba(233, 30, 99, 0.28);
+    background: rgba(59, 130, 246, 0.28);
     border-color: var(--color-accent-primary);
-    box-shadow: 0 0 12px rgba(233, 30, 99, 0.4);
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
     transform: scale(1.08);
 }
 
@@ -280,13 +280,13 @@
 }
 
 .category-badge.salary {
-    background: rgba(236, 72, 153, 0.2);
-    color: #ec4899;
+    background: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
 }
 
 .category-badge.freelance {
-    background: rgba(233, 30, 99, 0.2);
-    color: #e91e63;
+    background: rgba(59, 130, 246, 0.2);
+    color: #2563eb;
 }
 
 .category-badge.other {
@@ -371,7 +371,7 @@
     align-items: center;
     gap: var(--spacing-sm);
     background: var(--glass-bg);
-    border: 1px solid rgba(233, 30, 99, 0.2);
+    border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: var(--radius-lg);
     padding: 8px var(--spacing-md);
     backdrop-filter: blur(10px);
@@ -381,8 +381,8 @@
 }
 
 .search-bar:focus-within {
-    border-color: rgba(233, 30, 99, 0.6);
-    box-shadow: 0 0 12px rgba(233, 30, 99, 0.2);
+    border-color: rgba(59, 130, 246, 0.6);
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.2);
 }
 
 .search-icon {

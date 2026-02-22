@@ -117,7 +117,7 @@ export default function Goals() {
         switch (status) {
             case 'on-track': return '#10b981';
             case 'behind': return '#ef4444';
-            case 'completed': return '#ec4899';
+            case 'completed': return '#3b82f6';
             default: return '#64748b';
         }
     };
@@ -286,7 +286,7 @@ export default function Goals() {
                                                             className="progress-slider"
                                                             style={{
                                                                 backgroundSize: currentVal <= 0 ? '0% 100%' : `calc(${currentVal}% + ${10 - currentVal * 0.2}px) 100%`,
-                                                                backgroundImage: `linear-gradient(#ec4899, #ec4899)`,
+                                                                backgroundImage: `linear-gradient(#3b82f6, #3b82f6)`,
                                                                 backgroundRepeat: 'no-repeat'
                                                             }}
                                                         />

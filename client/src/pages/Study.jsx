@@ -273,8 +273,8 @@ export default function Study() {
         const isExpanded = expandedItems.has(item._id);
 
         const typeColors = {
-            subject: '#e91e63',
-            chapter: '#ec4899',
+            subject: '#2563eb',
+            chapter: '#3b82f6',
             topic: '#f472b6'
         };
 
@@ -357,7 +357,7 @@ export default function Study() {
                                     type="text"
                                     value={formData.title}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                    placeholder="e.g., Pharmacology, Opioids, Morphine"
+                                    placeholder="e.g., Thermodynamics, Data Structures, Circuits"
                                     required
                                 />
                             </div>

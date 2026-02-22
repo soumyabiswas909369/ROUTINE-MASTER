@@ -122,9 +122,9 @@ export default function Routines() {
 
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const routineTypes = [
-        { value: 'morning', label: 'Morning Shift', color: '#e91e63' },
-        { value: 'night', label: 'Night Shift', color: '#ec4899' },
-        { value: 'off-day', label: 'Off Day', color: '#f472b6' },
+        { value: 'morning', label: 'Morning Shift', color: '#2563eb' },
+        { value: 'night', label: 'Night Shift', color: '#3b82f6' },
+        { value: 'off-day', label: 'Off Day', color: '#38bdf8' },
         { value: 'custom', label: 'Custom', color: '#10b981' }
     ];
 

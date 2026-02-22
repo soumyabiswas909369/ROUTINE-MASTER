@@ -23,11 +23,11 @@
     margin: 0;
     text-shadow: none;
     background: linear-gradient(to right,
-            #DC143C,
-            #ef4444,
+            #8b5cf6,
+            #38bdf8,
             #ffffff,
-            #ef4444,
-            #DC143C) !important;
+            #38bdf8,
+            #8b5cf6) !important;
     background-size: 200% auto !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
@@ -39,17 +39,17 @@
 @keyframes textShimmerCrimson {
     0% {
         background-position: 0% 50%;
-        filter: drop-shadow(0 0 8px rgba(220, 20, 60, 0.3));
+        filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.3));
     }
 
     50% {
         background-position: 100% 50%;
-        filter: drop-shadow(0 0 15px rgba(220, 20, 60, 0.6));
+        filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.6));
     }
 
     100% {
         background-position: 0% 50%;
-        filter: drop-shadow(0 0 8px rgba(220, 20, 60, 0.3));
+        filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.3));
     }
 }
 
@@ -86,7 +86,7 @@
 .nav-link.active {
     color: var(--color-accent-primary);
     background: var(--color-surface);
-    box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
 }
 
 .mobile-menu-btn {
@@ -172,7 +172,7 @@
     }
 
     .nav-link.active {
-        color: #ec4899;
+        color: #3b82f6;
         /* Change from orange to pink */
     }
 
@@ -189,7 +189,7 @@
         transform: translateX(-50%);
         width: 40px;
         height: 4px;
-        background: #ec4899;
+        background: #3b82f6;
         border-radius: 0 0 4px 4px;
     }
 }

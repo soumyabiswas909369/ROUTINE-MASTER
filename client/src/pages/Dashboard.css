@@ -149,7 +149,7 @@
 
     .featured-balance-card {
         background:
-            radial-gradient(circle at 10% 90%, rgba(236, 72, 153, 0.2) 0%, transparent 50%),
+            radial-gradient(circle at 10% 90%, rgba(59, 130, 246, 0.2) 0%, transparent 50%),
             rgba(255, 255, 255, 0.03) !important;
         backdrop-filter: blur(8px) saturate(150%) !important;
         -webkit-backdrop-filter: blur(8px) saturate(150%) !important;
@@ -157,7 +157,7 @@
         border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
         border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
         box-shadow:
-            inset 0 0 30px rgba(236, 72, 153, 0.05),
+            inset 0 0 30px rgba(59, 130, 246, 0.05),
             0 20px 40px -10px rgba(0, 0, 0, 0.3) !important;
         padding: var(--spacing-xl) !important;
         border-radius: 30px !important;
@@ -197,7 +197,7 @@
     flex-direction: column !important;
     justify-content: space-between !important;
     background:
-        radial-gradient(circle at 0% 100%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 0% 100%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
         rgba(255, 255, 255, 0.03) !important;
     backdrop-filter: blur(8px) saturate(150%) !important;
     -webkit-backdrop-filter: blur(8px) saturate(150%) !important;

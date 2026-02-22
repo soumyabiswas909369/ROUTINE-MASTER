@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Bell, Heart } from 'lucide-react';
+import { Bell } from 'lucide-react';
 import { reminderAPI } from '../utils/api';
 import './Header.css';
 
@@ -27,20 +27,17 @@ export default function Header() {
         <header className="mobile-header">
             <div className="user-profile">
                 <div className="avatar">
-                    <img src={`/her.jpeg?v=${new Date().getTime()}`} alt="Avatar" />
+                    <img src={`/new dp 3.jpeg?v=${new Date().getTime()}`} alt="Avatar" />
                 </div>
                 <div className="greeting">
                     <span>Welcome Back!</span>
-                    <h3>Enakshi Debnath</h3>
+                    <h3>Soumya Biswas</h3>
                 </div>
             </div>
             <div className="header-actions">
                 <Link to="/reminders" className="mobile-bell-btn" style={{ textDecoration: 'none' }}>
-                    <Bell size={20} color="#ec4899" />
+                    <Bell size={20} color="#3b82f6" />
                     {remindersCount > 0 && <span className="dot"></span>}
-                </Link>
-                <Link to="/dedication" className="mobile-heart-btn">
-                    <Heart size={20} color="#ec4899" />
                 </Link>
             </div>
         </header>

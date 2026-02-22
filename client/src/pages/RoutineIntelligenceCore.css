@@ -12,7 +12,7 @@
 .ric-core-page {
     min-height: 100vh;
     background: radial-gradient(circle at 50% -20%, rgba(139, 92, 246, 0.15), transparent 60%),
-        radial-gradient(circle at 0% 100%, rgba(236, 72, 153, 0.1), transparent 40%);
+        radial-gradient(circle at 0% 100%, rgba(59, 130, 246, 0.1), transparent 40%);
     color: #fff;
     padding-bottom: 100px;
     font-family: 'Inter', system-ui, sans-serif;
@@ -167,7 +167,7 @@
 .health-dial-glow {
     position: absolute;
     inset: -30px;
-    background: radial-gradient(circle, rgba(236, 72, 153, 0.25) 0%, rgba(59, 130, 246, 0.25) 50%, transparent 70%);
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, rgba(59, 130, 246, 0.25) 50%, transparent 70%);
     filter: blur(30px);
     border-radius: 50%;
     animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -204,7 +204,7 @@
 }
 
 .dial-fg {
-    filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.8));
+    filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.8));
     transition: stroke-dashoffset 1s ease-out;
 }
 
@@ -219,9 +219,9 @@
 }
 
 .brain-core-icon {
-    color: #fbcfe8;
+    color: #bfdbfe;
     margin-bottom: 0px;
-    filter: drop-shadow(0 0 10px rgba(236, 72, 153, 0.8));
+    filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.8));
 }
 
 .score-num {
@@ -229,7 +229,7 @@
     font-weight: 800;
     line-height: 1;
     color: #ffffff;
-    text-shadow: 0 0 20px rgba(236, 72, 153, 0.8), 0 0 40px rgba(139, 92, 246, 0.6);
+    text-shadow: 0 0 20px rgba(59, 130, 246, 0.8), 0 0 40px rgba(139, 92, 246, 0.6);
 }
 
 .score-max {
@@ -331,8 +331,8 @@
 }
 
 .bg-pink-500 {
-    background: #ec4899;
-    color: #ec4899;
+    background: #3b82f6;
+    color: #3b82f6;
 }
 
 /* Friendly Mentor Styles */
@@ -578,8 +578,8 @@
 }
 
 .dot.o {
-    background: #ec4899;
-    box-shadow: 0 0 8px #ec4899;
+    background: #3b82f6;
+    box-shadow: 0 0 8px #3b82f6;
 }
 
 /* Failure */

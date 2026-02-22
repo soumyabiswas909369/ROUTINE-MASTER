@@ -67,6 +67,13 @@ export default function Dashboard() {
                 };
             });
 
+            if (trendData.length === 1) {
+                trendData.unshift({
+                    ...trendData[0],
+                    date: 'Start'
+                });
+            }
+
             setStats({
                 reminders: remindersRes.data.totalItems || 0,
                 routines: routinesRes.data.totalItems || 0,
@@ -76,7 +83,14 @@ export default function Dashboard() {
                 comparison: statsData.monthComparison || { currentBalance: 0, lastBalance: 0, hasLastMonthData: false }
             });
             setDailyData(trendData);
-            setHabitTrendData((habitTrendRes.data.trend || []).slice(-14));
+            let hTrend = (habitTrendRes.data.trend || []).slice(-14);
+            if (hTrend.length === 1) {
+                hTrend.unshift({
+                    ...hTrend[0],
+                    date: 'Start'
+                });
+            }
+            setHabitTrendData(hTrend);
         } catch (error) {
             console.error('Error loading stats:', error);
         }
@@ -124,7 +138,7 @@ export default function Dashboard() {
         { path: '/time-analytics', icon: BarChart3, title: 'Time Analytics', badgeKey: 'analytics', color: 'blue' },
         { path: '/goals', icon: Target, title: 'Goal Tracker', badgeKey: 'goals', color: 'purple' },
         { path: '/focus', icon: Timer, title: 'Focus Mode', badgeKey: 'focus', color: 'orange' },
-        { path: '/habits', icon: Flame, title: 'Habit Streaks', badgeKey: 'habits', color: 'pink' },
+        { path: '/habits', icon: Flame, title: 'Habit Streaks', badgeKey: 'habits', color: 'blue' },
         { path: '/weekly-review', icon: ClipboardList, title: 'Weekly Review', badgeKey: 'review', color: 'cyan' }
     ];
 
@@ -219,9 +233,9 @@ export default function Dashboard() {
                         <ResponsiveContainer width="100%" height="100%">
                             <AreaChart data={dailyData.slice(-14)} margin={{ top: 20, right: 10, left: 0, bottom: 10 }}>
                                 <defs>
-                                    <linearGradient id="pinkGradient" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#ff69b4" stopOpacity={0.4} />
-                                        <stop offset="95%" stopColor="#ff69b4" stopOpacity={0} />
+                                    <linearGradient id="blueGradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4} />
+                                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                                     </linearGradient>
                                 </defs>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.1)" />
@@ -245,10 +259,10 @@ export default function Dashboard() {
                                 <Area
                                     type="monotone"
                                     dataKey="balanceTrend"
-                                    stroke="#ff69b4"
-                                    fill="url(#pinkGradient)"
+                                    stroke="#3b82f6"
+                                    fill="url(#blueGradient)"
                                     strokeWidth={3}
-                                    activeDot={{ r: 6, fill: '#fff', stroke: '#ff69b4', strokeWidth: 2 }}
+                                    activeDot={{ r: 6, fill: '#fff', stroke: '#3b82f6', strokeWidth: 2 }}
                                 />
                             </AreaChart>
                         </ResponsiveContainer>

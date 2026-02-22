@@ -9,7 +9,7 @@ const ModuleIcons = {
     'Time': { icon: Clock, color: '#3b82f6', route: '/time-analytics' },
     'Goals': { icon: Target, color: '#a855f7', route: '/goals' },
     'Focus': { icon: Timer, color: '#0ea5e9', route: '/focus' },
-    'Habits': { icon: Flame, color: '#ec4899', route: '/habits' },
+    'Habits': { icon: Flame, color: '#3b82f6', route: '/habits' },
     'Attendance': { icon: CheckSquare, color: '#10b981', route: '/attendance' },
     'Routines': { icon: CalendarIcon, color: '#f59e0b', route: '/routines' },
     'Study': { icon: BookOpen, color: '#f97316', route: '/study' }
@@ -295,7 +295,7 @@ export default function RoutineIntelligenceCore() {
                     {/* Master Health Widget */}
                     <div className="ric-panel health-panel cinematic-neon">
                         <div className="health-header" style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                            <div className="dynamic-branding-tag" style={{ background: 'rgba(236, 72, 153, 0.15)', color: '#ec4899', padding: '4px 12px', borderRadius: '30px', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', display: 'inline-block', marginBottom: '0.5rem', border: '1px solid rgba(236, 72, 153, 0.3)' }}>
+                            <div className="dynamic-branding-tag" style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6', padding: '4px 12px', borderRadius: '30px', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', display: 'inline-block', marginBottom: '0.5rem', border: '1px solid rgba(59, 130, 246, 0.3)' }}>
                                 {dynamicAI ? dynamicAI.PriorityLabel : "SYSTEM SCAN"}
                             </div>
                             <h2 style={{ fontSize: '1.75rem', fontWeight: 900, color: '#fff', textShadow: '0 0 15px rgba(255,255,255,0.3)', marginBottom: '0.25rem' }}>
@@ -305,12 +305,12 @@ export default function RoutineIntelligenceCore() {
                         </div>
 
                         <div className="health-dial-container">
-                            <div className="health-dial-glow" style={{ background: data.globalScore > 70 ? 'radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%)' : 'radial-gradient(circle, rgba(236, 72, 153, 0.2) 0%, transparent 70%)' }}></div>
+                            <div className="health-dial-glow" style={{ background: data.globalScore > 70 ? 'radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%)' : 'radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%)' }}></div>
                             <div className="health-dial">
                                 <svg viewBox="0 0 100 100">
                                     <defs>
                                         <linearGradient id="score-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                            <stop offset="0%" stopColor={data.globalScore > 70 ? "#10b981" : "#ec4899"} />
+                                            <stop offset="0%" stopColor={data.globalScore > 70 ? "#10b981" : "#3b82f6"} />
                                             <stop offset="50%" stopColor="#8b5cf6" />
                                             <stop offset="100%" stopColor={data.globalScore > 70 ? "#3b82f6" : "#f59e0b"} />
                                         </linearGradient>
@@ -396,7 +396,7 @@ export default function RoutineIntelligenceCore() {
                                         <defs>
                                             <linearGradient id="gFocus" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.4} /><stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} /></linearGradient>
                                             <linearGradient id="gLoad" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.4} /><stop offset="95%" stopColor="#0ea5e9" stopOpacity={0} /></linearGradient>
-                                            <linearGradient id="gStudy" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#ec4899" stopOpacity={0.4} /><stop offset="95%" stopColor="#ec4899" stopOpacity={0} /></linearGradient>
+                                            <linearGradient id="gStudy" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4} /><stop offset="95%" stopColor="#3b82f6" stopOpacity={0} /></linearGradient>
                                         </defs>
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
                                         <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 11 }} />
@@ -410,7 +410,7 @@ export default function RoutineIntelligenceCore() {
 
                                         <Area type="monotone" dataKey="focus" stroke="#8b5cf6" fill="url(#gFocus)" strokeWidth={3} activeDot={{ r: 6, fill: '#fff', stroke: '#8b5cf6', strokeWidth: 2 }} dot={false} />
                                         <Area type="monotone" dataKey="load" stroke="#0ea5e9" fill="url(#gLoad)" strokeWidth={3} activeDot={{ r: 6, fill: '#fff', stroke: '#0ea5e9', strokeWidth: 2 }} dot={false} />
-                                        <Area type="monotone" dataKey="study" stroke="#ec4899" fill="url(#gStudy)" strokeWidth={3} activeDot={{ r: 6, fill: '#fff', stroke: '#ec4899', strokeWidth: 2 }} dot={false} />
+                                        <Area type="monotone" dataKey="study" stroke="#3b82f6" fill="url(#gStudy)" strokeWidth={3} activeDot={{ r: 6, fill: '#fff', stroke: '#3b82f6', strokeWidth: 2 }} dot={false} />
                                     </AreaChart>
                                 </ResponsiveContainer>
                             </div>

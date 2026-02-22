@@ -1,6 +1,12 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://routine-master.onrender.com/api';
+let API_BASE_URL = import.meta.env.VITE_API_URL || 'https://routine-master.onrender.com/api';
+
+// Support mobile/network testing by dynamically swapping localhost with the actual IP
+if (import.meta.env.DEV && API_BASE_URL.includes('localhost') && window.location.hostname !== 'localhost') {
+    API_BASE_URL = API_BASE_URL.replace('localhost', window.location.hostname);
+}
+
 console.log('API_BASE_URL:', API_BASE_URL);
 
 const api = axios.create({

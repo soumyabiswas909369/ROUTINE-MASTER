@@ -64,12 +64,12 @@ const ParticleBackground = () => {
 
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
-                    ctx.fillStyle = `hsla(335, 100%, ${lightness}%, ${alpha})`;
+                    ctx.fillStyle = `hsla(217, 100%, ${lightness}%, ${alpha})`;
 
                     // MOTION GLOW: Ultra-intensified and strictly tied to speed
                     if (motionGlow > 0.1) {
                         ctx.shadowBlur = (motionGlow * 80) * sizeScaler * p.scale;
-                        ctx.shadowColor = `hsla(335, 100%, 75%, ${alpha * motionGlow})`;
+                        ctx.shadowColor = `hsla(217, 100%, 75%, ${alpha * motionGlow})`;
                     }
 
                     ctx.fill();

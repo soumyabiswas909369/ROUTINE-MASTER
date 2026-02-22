@@ -77,7 +77,7 @@
 }
 
 .type-btn.active {
-    background: rgba(233, 30, 99, 0.2);
+    background: rgba(59, 130, 246, 0.2);
     border-color: var(--color-accent-primary);
     color: var(--color-accent-primary);
     font-weight: 600;
@@ -137,7 +137,7 @@
 }
 
 .link-pill.active {
-    background: rgba(233, 30, 99, 0.2);
+    background: rgba(59, 130, 246, 0.2);
     border-color: var(--color-accent-primary);
     color: var(--color-accent-primary);
 }
@@ -228,7 +228,7 @@
 
 .control-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(233, 30, 99, 0.3);
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
 }
 
 .done-message {

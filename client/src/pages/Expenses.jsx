@@ -216,7 +216,7 @@ export default function Expenses() {
         { name: 'Health', value: summary.health, color: '#9f1239' },
         { name: 'Entertainment', value: summary.entertainment, color: '#ff6b81' },
         { name: 'Hobby', value: summary.hobby, color: '#db2777' },
-        { name: 'Necessary', value: summary.necessary, color: '#ec4899' }
+        { name: 'Necessary', value: summary.necessary, color: '#3b82f6' }
     ];
 
     const incomeData = [
@@ -343,7 +343,7 @@ export default function Expenses() {
                     </div>
                 </Card>
                 <Card className="summary-card balance">
-                    <div className="summary-icon" style={{ color: summary.balance >= 0 ? '#ec4899' : '#ef4444' }}><DollarSign size={32} /></div>
+                    <div className="summary-icon" style={{ color: summary.balance >= 0 ? '#3b82f6' : '#ef4444' }}><DollarSign size={32} /></div>
                     <div className="summary-content">
                         <h4>Balance</h4>
                         <h2 style={{ color: summary.balance >= 0 ? '#10b981' : '#ef4444' }}>

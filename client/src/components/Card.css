@@ -148,9 +148,9 @@
 }
 
 .module-card-icon-wrapper.pink {
-    background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(219, 39, 119, 0.1));
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.1));
     color: #f472b6;
-    box-shadow: 0 0 15px rgba(236, 72, 153, 0.15);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.15);
 }
 
 .module-card-icon-wrapper.cyan {
@@ -201,8 +201,8 @@
 
 .module-card-badge.pink {
     color: #f472b6;
-    background: rgba(236, 72, 153, 0.15);
-    box-shadow: 0 0 8px rgba(236, 72, 153, 0.1);
+    background: rgba(59, 130, 246, 0.15);
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.1);
 }
 
 .module-card-badge.cyan {

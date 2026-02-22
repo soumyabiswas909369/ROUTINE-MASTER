@@ -55,7 +55,7 @@ export default function Dedication() {
 
                 {/* Photo Frame */}
                 <div className="photo-frame">
-                    <img src="/her.jpeg" alt="Enakshi" className="dedication-photo" />
+                    <img src="/new dp 3.jpeg" alt="Soumya" className="dedication-photo" />
                 </div>
 
                 <div className="dedication-text-container">
