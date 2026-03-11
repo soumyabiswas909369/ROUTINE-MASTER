@@ -14,6 +14,8 @@ import FocusMode from './pages/FocusMode';
 import Habits from './pages/Habits';
 import WeeklyReview from './pages/WeeklyReview';
 import RoutineIntelligenceCore from './pages/RoutineIntelligenceCore';
+import WorkoutTracker from './pages/WorkoutTracker';
+import SinsReflection from './pages/SinsReflection';
 import ParticleBackground from './components/ParticleBackground';
 import './App.css';
 
@@ -74,6 +76,8 @@ function App() {
             <Route path="/habits" element={<Habits />} />
             <Route path="/weekly-review" element={<WeeklyReview />} />
             <Route path="/routine-intelligence" element={<RoutineIntelligenceCore />} />
+            <Route path="/workout" element={<WorkoutTracker />} />
+            <Route path="/sins-reflection" element={<SinsReflection />} />
           </Routes>
         </main>
       </div>

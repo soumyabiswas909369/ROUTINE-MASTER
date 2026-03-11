@@ -1,0 +1,835 @@
+/* ────────────────────────────────────────────────────
+   WORKOUT TRACKER — Professional Obsidian Suite
+   Accent: Navy Blue (#1e40af) & Sky Blue (#38bdf8)
+──────────────────────────────────────────────────── */
+
+.wt-page {
+    padding: var(--spacing-lg) var(--spacing-md) 120px;
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+    min-height: 100vh;
+}
+
+/* ── Typography & Header ── */
+.wt-title-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.wt-title-gradient {
+    background: linear-gradient(to right, #1e40af, #38bdf8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 2.25rem;
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    margin: 0;
+}
+
+.wt-subtitle {
+    color: #64748b;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-top: 4px;
+}
+
+/* ── Tabs ── */
+.wt-tabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 100px;
+    scrollbar-width: none;
+}
+
+.wt-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    border-radius: 100px;
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+}
+
+.wt-tab:hover {
+    color: #f8fafc;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.wt-tab.active {
+    background: #1e40af;
+    color: #ffffff;
+    box-shadow: 0 4px 20px rgba(30, 64, 175, 0.3);
+}
+
+.wt-tab-icon { flex-shrink: 0; }
+
+/* ── General Cards ── */
+.wt-card {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(20px);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.wt-card:hover {
+    border-color: rgba(30, 64, 175, 0.2) !important;
+}
+
+.wt-section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #f8fafc;
+    margin-bottom: 20px;
+}
+
+/* ── Routine Management (Tab 0) ── */
+.wt-input-card {
+    border: 1px dashed rgba(30, 64, 175, 0.3) !important;
+}
+
+.wt-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.wt-premium-input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.wt-btn-glow {
+    background: #1e40af;
+    color: #ffffff;
+    border: none;
+    height: 48px;
+    width: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(30, 64, 175, 0.2);
+    transition: all 0.2s;
+}
+
+.wt-btn-glow:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(30, 64, 175, 0.4);
+}
+
+.wt-days-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+.wt-day-card {
+    padding: 0 !important;
+    overflow: hidden;
+}
+
+.wt-day-header-main {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.wt-day-brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.wt-day-icon-box {
+    width: 44px;
+    height: 44px;
+    background: rgba(30, 64, 175, 0.1);
+    border: 1px solid rgba(30, 64, 175, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #38bdf8;
+    position: relative;
+    cursor: pointer;
+}
+
+.wt-day-icon-box:hover {
+  background: rgba(30, 64, 175, 0.2);
+}
+
+.wt-day-display-name {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #f8fafc;
+}
+
+.wt-day-stats-pill {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+}
+
+.wt-day-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Icon Picker UI */
+.wt-icon-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 10px;
+}
+
+.wt-picker-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.wt-picker-btn:hover, .wt-picker-btn.active {
+  background: rgba(30, 64, 175, 0.1);
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+.wt-icon-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    color: #94a3b8;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.wt-delete-btn:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+.wt-day-details-panel {
+    background: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 20px;
+}
+
+.wt-exercise-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    margin-bottom: 8px;
+}
+
+.wt-ex-marker {
+    width: 3px;
+    height: 24px;
+    background: #1e40af;
+    border-radius: 4px;
+    margin-right: 12px;
+}
+
+.wt-ex-main-info { display: flex; align-items: center; }
+.wt-ex-label { margin: 0; font-weight: 700; font-size: 0.9rem; color: #f1f5f9; }
+.wt-ex-summary { margin: 4px 0 0; font-size: 0.75rem; color: #64748b; }
+
+.wt-add-exercise-trigger {
+    width: 100%;
+    margin-top: 16px;
+    padding: 12px;
+    background: transparent;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.wt-add-exercise-trigger:hover {
+    border-color: #1e40af;
+    color: #1e40af;
+    background: rgba(30, 64, 175, 0.02);
+}
+
+/* ── Log Workout (Tab 1) ── */
+.wt-log-meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 16px;
+}
+
+.wt-meta-label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: #64748b;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.wt-date-input-wrapper, .wt-select-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.wt-input-icon {
+    position: absolute;
+    left: 14px;
+    color: #64748b;
+}
+
+.wt-meta-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px 10px 10px 40px;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.wt-active-ex-card {
+    margin-bottom: 16px;
+}
+
+.wt-active-ex-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.wt-active-ex-title {
+    font-size: 1rem;
+    font-weight: 800;
+    margin: 0;
+    color: #1e40af;
+}
+
+.wt-active-ex-decoration {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(30, 64, 175, 0.2), transparent);
+}
+
+.wt-log-table {
+  width: 100%;
+}
+
+.wt-log-table-header {
+    display: grid;
+    grid-template-columns: 40px 1fr 1fr 40px;
+    padding: 8px;
+    font-size: 0.65rem;
+    font-weight: 900;
+    color: #64748b;
+    text-align: center;
+}
+
+.wt-log-sets-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wt-log-set-row {
+    display: grid;
+    grid-template-columns: 40px 1fr 1fr 40px;
+    gap: 8px;
+    align-items: center;
+    padding: 4px 0;
+}
+
+.wt-set-mark {
+    font-size: 0.8rem;
+    font-weight: 900;
+    color: #64748b;
+    text-align: center;
+}
+
+.wt-table-input {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 8px;
+    color: white;
+    text-align: center;
+    font-weight: 700;
+}
+
+.wt-persist-btn {
+    width: 100%;
+    padding: 20px;
+    background: #1e40af;
+    border: none;
+    border-radius: 16px;
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.wt-persist-btn.is-complete {
+    background: #172554;
+    color: #38bdf8;
+}
+
+.wt-btn-success-flow { display: flex; align-items: center; gap: 8px; }
+
+/* ── History Filter Tabs (FIX) ── */
+.wt-filter-tabs {
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 24px;
+  width: fit-content;
+}
+
+.wt-filter-chip {
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 800;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.wt-filter-chip:hover {
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.wt-filter-chip.active {
+  background: #1e40af;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+}
+
+/* ── Analytics (Tab 3) ── */
+.wt-analytics-card {
+    padding: 24px !important;
+    margin-bottom: 20px;
+}
+
+.wt-analytics-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.wt-analytics-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.wt-accent-navy { color: #1e40af; }
+
+.wt-analytics-title {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #f1f5f9;
+}
+
+.wt-data-select {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.wt-chart-viewport, .wt-chart-viewport-sm {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.wt-analytics-grid-secondary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.wt-topology-stack { display: flex; flex-direction: column; gap: 12px; }
+.wt-topology-item { display: flex; flex-direction: column; gap: 6px; }
+.wt-topology-meta { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; color: #94a3b8; }
+.wt-topology-bar { height: 8px; background: rgba(255, 255, 255, 0.05); border-radius: 4px; overflow: hidden; }
+.wt-topology-fill { height: 100%; background: #38bdf8; border-radius: 4px; }
+
+/* PR Records (FIX) */
+.wt-records-shelf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.wt-record-tag {
+  background: rgba(56, 189, 248, 0.03);
+  border: 1px solid rgba(56, 189, 248, 0.1);
+  border-radius: 16px;
+  padding: 16px;
+  flex: 1;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.3s;
+}
+
+.wt-record-tag:hover {
+  background: rgba(56, 189, 248, 0.06);
+  border-color: rgba(56, 189, 248, 0.3);
+  transform: translateY(-2px);
+}
+
+.wt-record-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.wt-record-ex {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #f1f5f9;
+  text-transform: capitalize;
+}
+
+.wt-record-peak {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #38bdf8;
+}
+
+.wt-record-unit {
+  font-size: 0.65rem;
+  margin-left: 2px;
+  opacity: 0.7;
+}
+
+.wt-record-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.wt-pr-glow-label {
+  font-size: 0.6rem;
+  font-weight: 900;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  padding: 2px 8px;
+  border-radius: 100px;
+  letter-spacing: 0.05em;
+}
+
+.wt-record-date {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+/* ── Intelligence Feed (Tab 4) ── */
+.wt-rec-intelligence-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 32px;
+}
+
+.wt-rec-hero {
+    position: sticky;
+    top: 20px;
+    background: rgba(30, 64, 175, 0.03);
+    border: 1px solid rgba(30, 64, 175, 0.1);
+    padding: 40px 24px;
+    border-radius: 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+}
+
+.wt-rec-hero-icon { color: #38bdf8; margin-bottom: 24px; position: relative; z-index: 1; }
+.wt-rec-hero-title { font-size: 1.5rem; font-weight: 900; color: white; margin-bottom: 8px; z-index: 1; }
+.wt-rec-hero-subtitle { font-size: 0.8rem; color: #64748b; font-weight: 600; z-index: 1; }
+
+.wt-rec-feed { display: flex; flex-direction: column; gap: 16px; }
+
+.wt-rec-pulse-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    display: flex;
+    overflow: hidden;
+}
+
+.wt-rec-side-marker { width: 4px; flex-shrink: 0; }
+.type-success .wt-rec-side-marker { background: #38bdf8; }
+.type-warning .wt-rec-side-marker { background: #fb923c; }
+.type-info .wt-rec-side-marker { background: #60a5fa; }
+
+.wt-rec-body { padding: 20px; flex: 1; }
+.wt-rec-header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.wt-rec-icon-wrapper { color: #f8fafc; opacity: 0.8; }
+.wt-rec-type-badge { font-size: 0.6rem; font-weight: 900; padding: 4px 10px; border-radius: 100px; background: rgba(255, 255, 255, 0.05); color: #94a3b8; letter-spacing: 0.05em; }
+
+.wt-rec-content-text { font-size: 0.9rem; line-height: 1.6; color: #cbd5e1; margin: 0; font-weight: 500; }
+
+/* ── BMI Professional Suite (Tab 5) ── */
+.wt-bmi-hero-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.wt-bmi-input-cluster {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+}
+
+.wt-biometric-field {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.wt-biometric-field label { font-size: 0.6rem; font-weight: 900; color: #64748b; letter-spacing: 0.1em; }
+.wt-biometric-field input {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 800;
+    width: 120px;
+    text-align: center;
+    padding: 12px;
+    border-radius: 16px;
+}
+
+.wt-compute-btn {
+    background: #1e40af;
+    color: #ffffff;
+    border: none;
+    padding: 14px 40px;
+    border-radius: 100px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(30, 64, 175, 0.2);
+}
+
+.wt-bmi-report-card { padding: 40px 20px; }
+.wt-bmi-gauge { display: flex; flex-direction: column; gap: 20px; }
+.wt-gauge-svg { width: 100%; height: 12px; filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.1)); }
+.wt-bmi-score-group { display: flex; align-items: baseline; gap: 16px; justify-content: center; }
+.wt-bmi-digit { font-size: 4rem; font-weight: 900; letter-spacing: -0.05em; }
+.wt-bmi-verdict { font-size: 0.8rem; font-weight: 800; padding: 6px 16px; border-radius: 100px; display: flex; align-items: center; gap: 6px; }
+
+.wt-bmi-legend-bar {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.wt-legend-tick {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #64748b;
+}
+
+.wt-tick-color {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.wt-bmi-history-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+
+.wt-entry-month {
+  font-weight: 900;
+  color: #f1f5f9;
+}
+
+.wt-entry-weight {
+  font-weight: 700;
+  color: #94a3b8;
+  margin-right: 12px;
+}
+
+.wt-entry-bmi {
+  font-weight: 900;
+}
+
+.wt-bmi-entry-badge {
+  font-size: 0.65rem;
+  font-weight: 900;
+  padding: 4px 12px;
+  border-radius: 100px;
+}
+
+/* ── History Timeline (Professional) ── */
+.wt-history-timeline { display: flex; flex-direction: column; gap: 12px; }
+.wt-timeline-item { display: grid; grid-template-columns: 70px 1fr; gap: 16px; }
+.wt-timeline-date-mark { display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 12px; height: 100%; }
+.wt-date-day { font-size: 1.25rem; font-weight: 900; color: #f8fafc; }
+.wt-date-month { font-size: 0.6rem; font-weight: 800; color: #64748b; }
+
+.wt-hist-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.wt-hist-type-pill { background: rgba(30, 64, 175, 0.1); color: #38bdf8; font-size: 0.65rem; font-weight: 900; padding: 4px 12px; border-radius: 4px; text-transform: uppercase; }
+
+.wt-hist-exercise-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.wt-hist-ex-name-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wt-hist-ex-title {
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.wt-pr-icon-inline {
+  color: #38bdf8;
+}
+
+.wt-hist-ex-metrics {
+  display: flex;
+  gap: 8px;
+}
+
+.wt-metrics-pill { font-size: 0.7rem; font-weight: 700; background: rgba(255, 255, 255, 0.05); padding: 2px 8px; border-radius: 4px; color: #94a3b8; }
+.wt-vol-pill { font-size: 0.7rem; font-weight: 700; color: #38bdf8; }
+
+/* ── Tooltips ── */
+.wt-tooltip {
+    background: #020617;
+    border: 1px solid rgba(30, 64, 175, 0.2);
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.wt-system-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+  color: #334155;
+}
+
+.wt-empty-icon {
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.wt-empty-text {
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+/* ── Mobile Optimization ── */
+@media (max-width: 768px) {
+    .wt-page { padding: 20px 16px 120px; }
+    .wt-log-meta-grid { grid-template-columns: 1fr; }
+    .wt-rec-intelligence-grid { grid-template-columns: 1fr; }
+    .wt-bmi-input-cluster { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+    .wt-analytics-grid-secondary { grid-template-columns: 1fr; }
+}

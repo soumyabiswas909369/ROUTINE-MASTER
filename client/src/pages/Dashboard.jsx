@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Bell, Calendar, BookOpen, FileText, DollarSign, TrendingUp, TrendingDown, Heart, CheckSquare, BarChart3, Target, Timer, Flame, ClipboardList } from 'lucide-react';
+import { Bell, Calendar, BookOpen, FileText, DollarSign, TrendingUp, TrendingDown, Heart, CheckSquare, BarChart3, Target, Timer, Flame, ClipboardList, Dumbbell, Skull } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
 import GravityContainer from '../components/GravityContainer';
 import Card from '../components/Card';
@@ -23,7 +23,9 @@ export default function Dashboard() {
         focus: { text: 'Start', loading: true },
         habits: { text: 'New', loading: true },
         review: { text: 'New', loading: true },
-        analytics: { text: 'This Week', loading: false }
+        analytics: { text: 'This Week', loading: false },
+        workout: { text: 'Track', loading: false },
+        sins: { text: 'Reflect', loading: false }
     });
 
     useEffect(() => {
@@ -139,7 +141,9 @@ export default function Dashboard() {
         { path: '/goals', icon: Target, title: 'Goal Tracker', badgeKey: 'goals', color: 'purple' },
         { path: '/focus', icon: Timer, title: 'Focus Mode', badgeKey: 'focus', color: 'orange' },
         { path: '/habits', icon: Flame, title: 'Habit Streaks', badgeKey: 'habits', color: 'blue' },
-        { path: '/weekly-review', icon: ClipboardList, title: 'Weekly Review', badgeKey: 'review', color: 'cyan' }
+        { path: '/weekly-review', icon: ClipboardList, title: 'Weekly Review', badgeKey: 'review', color: 'cyan' },
+        { path: '/workout', icon: Dumbbell, title: 'Workout Tracker', badgeKey: 'workout', color: 'blue' },
+        { path: '/sins-reflection', icon: Skull, title: 'Sins Reflection', badgeKey: 'sins', color: 'red' }
     ];
 
     const renderComparison = () => {
