@@ -5,12 +5,13 @@ import {
     Heart, Star, Zap, CheckCircle, XCircle, AlertTriangle,
     Crown, Coins, Eye, Utensils, Moon, ShieldCheck, Sun, 
     Leaf, HandHeart, Scale, Hourglass, Sword, Cloud, Wind, 
-    Target, Award, Info, Activity, Clock, Calendar
+    Target, Award, Info, Activity, Clock, Calendar, TrendingUp, Bell
 } from 'lucide-react';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
     ResponsiveContainer, Cell, AreaChart, Area
 } from 'recharts';
+import { reminderAPI } from '../utils/api';
 import Card from '../components/Card';
 import './SinsReflection.css';
 
@@ -109,8 +110,54 @@ export default function SinsReflection() {
     const todayEntry = reflections.find(r => r.date === todayStr);
     const [form, setForm] = useState(todayEntry || blankEntry());
     const [saved, setSaved] = useState(!!todayEntry);
+    
+    // Notifications State
+    const [reminders, setReminders] = useState([]);
+    const [isReminderLoading, setIsReminderLoading] = useState(false);
 
     useEffect(() => save(KEY, reflections), [reflections]);
+
+    useEffect(() => {
+        loadReminders();
+    }, []);
+
+    const loadReminders = async () => {
+        try {
+            const resp = await reminderAPI.getAll();
+            const data = resp.data.data || resp.data;
+            setReminders(Array.isArray(data) ? data : []);
+        } catch (e) {
+            console.error("Failed to load reminders", e);
+        }
+    };
+
+    const sinReminder = useMemo(() => 
+        reminders.find(r => r.type === 'sin-reflection' && r.isActive),
+    [reminders]);
+
+    const toggleReminder = async () => {
+        setIsReminderLoading(true);
+        try {
+            if (sinReminder) {
+                await reminderAPI.delete(sinReminder._id);
+                setReminders(prev => prev.filter(r => r._id !== sinReminder._id));
+            } else {
+                const newReminder = {
+                    title: 'Nightly Reflection',
+                    description: 'Time to record your sins and virtues for today.',
+                    type: 'sin-reflection',
+                    time: '21:00',
+                    daysOfWeek: [0,1,2,3,4,5,6],
+                    isActive: true
+                };
+                const resp = await reminderAPI.create(newReminder);
+                setReminders(prev => [...prev, resp.data]);
+            }
+            // Trigger background sync for Capacitor
+            window.dispatchEvent(new CustomEvent('sync-reminders'));
+        } catch (e) { console.error("Toggle reminder failed", e); }
+        finally { setIsReminderLoading(false); }
+    };
 
     const toggle = (field, value) => {
         setSaved(false);
@@ -167,16 +214,21 @@ export default function SinsReflection() {
         }
 
         const recent = reflections.slice(-7);
-        const avgScore = Math.round(recent.reduce((a, r) => a + disciplineScore(r), 0) / recent.length);
+        const avgScore = Math.round(recent.reduce((a, r) => a + disciplineScore(r), 0) / (recent.length || 1));
 
         if (avgScore >= 80) recs.push({ type: 'success', icon: <Award />, text: `Exceptional consistency. Your 7-day resonance is ${avgScore}/100. Character integrity is hardening.` });
         else if (avgScore >= 50) recs.push({ type: 'info', icon: <Activity />, text: `Steady progression. Your 7-day average of ${avgScore}/100 shows active moral engagement.` });
         else recs.push({ type: 'warning', icon: <AlertTriangle />, text: `Discipline oscillation detected (${avgScore}/100). Re-focus on a single virtue tomorrow to reset momentum.` });
 
-        const topSin = sinFrequency.find(s => s.count > 0);
-        if (topSin) {
-            const virtue = VIRTUE_MAP[topSin.sin];
-            recs.push({ type: 'warning', icon: SIN_ICONS[topSin.sin], text: `Constraint identified: ${topSin.sin} has appeared ${topSin.count} times. Neutralize through active practice of ${virtue}.` });
+        const recentSins = recent.flatMap(r => r.mistakes || []);
+        if (recentSins.length > 0) {
+            const mostFrequent = [...new Set(recentSins)].sort((a,b) => recentSins.filter(s=>s===b).length - recentSins.filter(s=>s===a).length)[0];
+            recs.push({ type: 'warning', icon: SIN_ICONS[mostFrequent], text: `Constraint identified: ${mostFrequent} is your most frequent entropy source this week. Neutralize through active practice of ${VIRTUE_MAP[mostFrequent]}.` });
+        }
+
+        const totalDefeated = recent.reduce((a, r) => a + (r.defeated?.length || 0), 0);
+        if (totalDefeated > 0) {
+            recs.push({ type: 'success', icon: <ShieldCheck />, text: `You showed strong discipline by resisting ${totalDefeated} temptations over the last 7 days. Consistency builds character.`});
         }
 
         const bestVirtueData = [...virtueProgress].sort((a, b) => b.pct - a.pct)[0];
@@ -186,6 +238,12 @@ export default function SinsReflection() {
 
         return recs;
     }, [reflections, sinFrequency, virtueProgress]);
+
+    const { userLevel, totalVirtuePoints } = useMemo(() => {
+        const pts = virtueProgress.reduce((a, v) => a + Math.round(v.pct / 10), 0);
+        const lvl = Math.max(1, Math.round(virtueProgress.reduce((a, v) => a + (v.pct / 100), 0) * 10 / SINS.length));
+        return { userLevel: lvl, totalVirtuePoints: pts };
+    }, [virtueProgress]);
 
     const streak = useMemo(() => {
         let count = 0;
@@ -216,9 +274,19 @@ export default function SinsReflection() {
         <div className="sr-page">
             {/* Header */}
             <div className="sr-header">
-                <button className="back-btn" onClick={() => navigate('/')}>
-                    <ArrowLeft size={20} /><span>Dashboard</span>
-                </button>
+                <div className="sr-header-controls">
+                    <button 
+                        className={`sr-reminder-toggle ${sinReminder ? 'active' : ''}`}
+                        onClick={toggleReminder}
+                        disabled={isReminderLoading}
+                        title={sinReminder ? "Disable Nightly Reminder" : "Enable Nightly Reminder (9:00 PM)"}
+                    >
+                        <Bell size={20} />
+                    </button>
+                    <button className="back-btn" onClick={() => navigate('/')}>
+                        <ArrowLeft size={20} /><span>Dashboard</span>
+                    </button>
+                </div>
                 <div className="sr-title-block">
                     <h1 className="module-title sr-title-gradient">Sins Reflection</h1>
                     <p className="sr-subtitle">Moral Heuristic Monitor</p>
@@ -344,6 +412,30 @@ export default function SinsReflection() {
                         <div className="sr-void"><Activity size={48} /><p>Insufficient logs to map virtue progress.</p></div>
                     ) : (
                         <div className="sr-virtue-scaffold">
+                            <div className="sr-growth-score-card sr-card">
+                                <div className="sr-growth-info">
+                                    <span className="sr-growth-title">Personal Growth Quotient</span>
+                                    <span className="sr-growth-value">{totalVirtuePoints}<small>PTS</small></span>
+                                </div>
+                                <div className="sr-level-badge">
+                                    <Flame size={14} className="sr-accent-crimson" />
+                                    LEVEL {userLevel} ASCENDANT
+                                </div>
+                            </div>
+                            
+                            <Card className="sr-card" style={{ marginBottom: '24px' }}>
+                                <h3 className="sr-section-title"><Target size={18} /> Discipline Milestones</h3>
+                                <div className="sr-milestone-track">
+                                    <div className="sr-milestone-line" />
+                                    {[3, 7, 14, 30].map(m => (
+                                        <div key={m} className={`sr-milestone-marker ${streak >= m ? 'achieved' : ''}`}>
+                                            <div className="sr-milestone-circle">{m}</div>
+                                            <span className="sr-milestone-label">{m} Days</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </Card>
+
                             {virtueProgress.map(({ sin, virtue, pct }) => (
                                 <Card key={sin} className="sr-card sr-virtue-scaffold-item">
                                     <div className="sr-scaffold-header">
@@ -372,8 +464,27 @@ export default function SinsReflection() {
                         <div className="sr-void"><BarChart3 size={48} /><p>Intelligence requires data inputs.</p></div>
                     ) : (
                         <>
+                            <Card className="sr-card">
+                                <h3 className="sr-section-title"><TrendingUp size={18} className="sr-accent-crimson" /> Discipline Trend (30D)</h3>
+                                <ResponsiveContainer width="100%" height={200}>
+                                    <AreaChart data={last30.filter(d=>d.hasData)} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                        <defs>
+                                            <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/>
+                                                <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+                                            </linearGradient>
+                                        </defs>
+                                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
+                                        <XAxis dataKey="date" hide />
+                                        <YAxis domain={[0, 100]} hide />
+                                        <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(239, 68, 68, 0.05)' }} />
+                                        <Area type="monotone" dataKey="score" stroke="#ef4444" strokeWidth={2} fillOpacity={1} fill="url(#colorScore)" />
+                                    </AreaChart>
+                                </ResponsiveContainer>
+                            </Card>
+
                             <Card className="sr-card sr-heatmap-card">
-                                <h3 className="sr-section-title"><Activity size={18} /> Discipline Resonance (30D)</h3>
+                                <h3 className="sr-section-title"><Activity size={18} /> Daily Resonance Heatmap</h3>
                                 <div className="sr-spectrum-grid">
                                     {last30.map((d, i) => (
                                         <div

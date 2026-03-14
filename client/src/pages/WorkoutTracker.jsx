@@ -4,11 +4,12 @@ import {
     ArrowLeft, Dumbbell, Plus, Trash2, ChevronDown, ChevronUp,
     BarChart3, Calendar, Activity, TrendingUp, Award, Scale,
     Edit2, Check, X, AlertCircle, Zap, Target, Flame, Heart, Info, Trophy, Layout,
-    Timer, BicepsFlexed, Crosshair
+    Timer, BicepsFlexed, Crosshair, Bell
 } from 'lucide-react';
+import { reminderAPI } from '../utils/api';
 import {
     LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid,
-    Tooltip, ResponsiveContainer, Legend, AreaChart, Area
+    Tooltip, ResponsiveContainer, Legend, AreaChart, Area, PieChart, Pie, Cell
 } from 'recharts';
 import Card from '../components/Card';
 import './WorkoutTracker.css';
@@ -60,14 +61,15 @@ const uid = () => Math.random().toString(36).slice(2, 10);
 /* ─── PRs per exercise from logs ─── */
 function computePRs(logs) {
     const prs = {};
-    logs.forEach(log => {
+    const sorted = [...logs].sort((a,b) => new Date(a.date) - new Date(b.date));
+    sorted.forEach(log => {
         log.exercises.forEach(ex => {
-            ex.sets.forEach(s => {
-                const w = parseFloat(s.weight) || 0;
+            const w = Math.max(...ex.sets.map(s => parseFloat(s.weight) || 0));
+            if (w > 0) {
                 if (!prs[ex.name] || w > prs[ex.name].weight) {
-                    prs[ex.name] = { weight: w, date: log.date };
+                    prs[ex.name] = { weight: w, date: log.date, prev: prs[ex.name] ? prs[ex.name].weight : 0 };
                 }
-            });
+            }
         });
     });
     return prs;
@@ -144,10 +146,55 @@ export default function WorkoutTracker() {
     const [bmiWeight, setBmiWeight] = useState('');
     const [bmiResult, setBmiResult] = useState(null);
 
+    // Notifications State
+    const [reminders, setReminders] = useState([]);
+    const [isReminderLoading, setIsReminderLoading] = useState(false);
+
     /* ─── Persist ─── */
     useEffect(() => save(KEYS.days, workoutDays), [workoutDays]);
     useEffect(() => save(KEYS.logs, logs), [logs]);
     useEffect(() => save(KEYS.bmi, bmiRecords), [bmiRecords]);
+
+    useEffect(() => {
+        loadReminders();
+    }, []);
+
+    const loadReminders = async () => {
+        try {
+            const resp = await reminderAPI.getAll();
+            const data = resp.data.data || resp.data;
+            setReminders(Array.isArray(data) ? data : []);
+        } catch (e) {
+            console.error("Failed to load reminders", e);
+        }
+    };
+
+    const workoutReminder = useMemo(() => 
+        reminders.find(r => r.type === 'workout' && r.isActive),
+    [reminders]);
+
+    const toggleReminder = async () => {
+        setIsReminderLoading(true);
+        try {
+            if (workoutReminder) {
+                await reminderAPI.delete(workoutReminder._id);
+                setReminders(prev => prev.filter(r => r._id !== workoutReminder._id));
+            } else {
+                const newReminder = {
+                    title: 'Time to Train!',
+                    description: 'Keep your momentum high. Log your session now.',
+                    type: 'workout',
+                    time: '18:00', // 6 PM default
+                    daysOfWeek: [0,1,2,3,4,5,6],
+                    isActive: true
+                };
+                const resp = await reminderAPI.create(newReminder);
+                setReminders(prev => [...prev, resp.data]);
+            }
+            window.dispatchEvent(new CustomEvent('sync-reminders'));
+        } catch (e) { console.error("Toggle reminder failed", e); }
+        finally { setIsReminderLoading(false); }
+    };
 
     /* ────────────────────────────
        WORKOUT DAYS management
@@ -295,20 +342,22 @@ export default function WorkoutTracker() {
             });
     }, [logs, analyticsExercise]);
 
-    // Weekly frequency (last 8 weeks)
-    const weeklyFrequency = useMemo(() => {
+    // Weekly Volume Load (last 8 weeks)
+    const weeklyVolume = useMemo(() => {
         const weeks = {};
         logs.forEach(l => {
             const d = new Date(l.date);
             const weekStart = new Date(d);
             weekStart.setDate(d.getDate() - d.getDay());
             const key = weekStart.toISOString().slice(0, 10);
-            weeks[key] = (weeks[key] || 0) + 1;
+            const vol = l.exercises.reduce((acc, ex) =>
+                acc + ex.sets.reduce((s, set) => s + (parseFloat(set.reps) || 0) * (parseFloat(set.weight) || 0), 0), 0);
+            weeks[key] = (weeks[key] || 0) + vol;
         });
         return Object.entries(weeks)
             .sort(([a], [b]) => new Date(a) - new Date(b))
             .slice(-8)
-            .map(([date, sessions]) => ({ date: date.slice(5), sessions }));
+            .map(([date, volume]) => ({ date: date.slice(5), volume: Math.round(volume) }));
     }, [logs]);
 
     // Volume per session (total kg lifted)
@@ -368,7 +417,7 @@ export default function WorkoutTracker() {
             recs.push({ icon: <Flame />, text: `Great consistency! ${weekCount} session${weekCount > 1 ? 's' : ''} this week.`, type: 'success' });
         }
 
-        // Check stagnation per exercise (same weight for 3+ consecutive logs)
+        // Check stagnation per exercise
         allExerciseNames.forEach(name => {
             const exLogs = logs
                 .filter(l => l.exercises.some(e => e.name === name))
@@ -381,8 +430,54 @@ export default function WorkoutTracker() {
                 });
                 const allSame = weights.slice(-3).every(w => w === weights[weights.slice(-3)[0]]);
                 if (allSame && weights[weights.length - 1] > 0) {
-                    recs.push({ icon: <TrendingUp />, text: `${name}: Weight has been the same for 3+ sessions. Try adding 2.5–5 kg next time!`, type: 'info' });
+                    recs.push({ icon: <TrendingUp />, text: `Progressive Overload: You've completed 3+ sessions of ${name} at ${weights[weights.length-1]}kg. Recommendation: increase weight next session.`, type: 'info' });
                 }
+            }
+        });
+
+        // Fatigue Detection (Volume spike)
+        if (weeklyVolume.length >= 2) {
+            const lastWeek = weeklyVolume[weeklyVolume.length - 2].volume;
+            const thisWeek = weeklyVolume[weeklyVolume.length - 1].volume;
+            if (lastWeek > 0 && thisWeek > lastWeek * 1.3) {
+                recs.push({ icon: <AlertCircle />, text: `Fatigue Detection: Training volume increased >30% this week. Ensure adequate recovery.`, type: 'warning' });
+            }
+        }
+
+        // Training Balance (Push vs Pull)
+        const pushVol = logsThisWeek(logs.filter(l => l.exercises.some(e => e.name.toLowerCase().includes('push') || e.name.toLowerCase().includes('chest'))));
+        const pullVol = logsThisWeek(logs.filter(l => l.exercises.some(e => e.name.toLowerCase().includes('pull') || e.name.toLowerCase().includes('back'))));
+        if (pushVol > 0 && pushVol >= pullVol * 2) {
+            recs.push({ icon: <Scale />, text: `Training Imbalance: Push muscles trained twice as often as pull this week. Consider adding back/pull exercises.`, type: 'warning' });
+        }
+
+        // Form Guidance
+        logs.slice(-3).forEach(l => l.exercises.forEach(ex => {
+            const avgReps = ex.sets.reduce((a, s) => a + (parseFloat(s.reps)||0), 0) / ex.sets.length;
+            const avgWeight = ex.sets.reduce((a, s) => a + (parseFloat(s.weight)||0), 0) / ex.sets.length;
+            if (ex.name.toLowerCase().includes('deadlift') && avgReps > 12 && avgWeight < 40) {
+                if (!recs.some(r => r.text.includes('deadlift reps exceed'))) {
+                    recs.push({ icon: <Info />, text: `Form Guidance: If deadlift reps exceed 12 with low weight, consider increasing weight for optimal hypertrophy.`, type: 'info' });
+                }
+            } 
+        }));
+        
+        // Muscle Group Recovery indicator
+        const recentDays = {};
+        logs.slice(-4).forEach(l => {
+           l.exercises.forEach(ex => {
+               const lower = ex.name.toLowerCase();
+               let group = 'Other';
+               if (lower.includes('leg') || lower.includes('squat')) group = 'Legs';
+               else if (lower.includes('chest') || lower.includes('push') || lower.includes('bench')) group = 'Chest';
+               else if (lower.includes('back') || lower.includes('pull') || lower.includes('row')) group = 'Back';
+               
+               if (group !== 'Other') recentDays[group] = (recentDays[group] || 0) + 1;
+           });
+        });
+        Object.entries(recentDays).forEach(([group, count]) => {
+            if (count >= 3) {
+                 recs.push({ icon: <Heart />, text: `Recovery Alert: ${group} trained 3+ times in the last 4 logs. Ensure you are giving these muscles 48h to recover.`, type: 'warning' });
             }
         });
 
@@ -464,9 +559,19 @@ export default function WorkoutTracker() {
         <div className="wt-page">
             {/* Header */}
             <div className="wt-header">
-                <button className="back-btn" onClick={() => navigate('/')}>
-                    <ArrowLeft size={20} /><span>Dashboard</span>
-                </button>
+                <div className="wt-header-controls">
+                    <button 
+                        className={`wt-reminder-toggle ${workoutReminder ? 'active' : ''}`}
+                        onClick={toggleReminder}
+                        disabled={isReminderLoading}
+                        title={workoutReminder ? "Disable Workout Reminder" : "Enable Workout Reminder (6:00 PM)"}
+                    >
+                        <Bell size={20} />
+                    </button>
+                    <button className="back-btn" onClick={() => navigate('/')}>
+                        <ArrowLeft size={20} /><span>Dashboard</span>
+                    </button>
+                </div>
                 <div className="wt-title-section">
                     <h1 className="module-title wt-title-gradient">Workout Tracker</h1>
                     <p className="wt-subtitle">System Progression Interface</p>
@@ -736,9 +841,15 @@ export default function WorkoutTracker() {
                                         </div>
                                         <div className="wt-hist-content">
                                             {log.exercises.map((ex, i) => {
-                                                const totalVol = ex.sets.reduce((a, s) => a + (parseFloat(s.reps) || 0) * (parseFloat(s.weight) || 0), 0);
+                                                const totalReps = ex.sets.reduce((a, s) => a + (parseFloat(s.reps) || 0), 0);
                                                 const maxW = Math.max(...ex.sets.map(s => parseFloat(s.weight) || 0));
                                                 const isPR = prs[ex.name]?.weight === maxW && prs[ex.name]?.date === log.date;
+                                                
+                                                const intensityScore = maxW > 0 ? (maxW * totalReps) / ex.sets.length : totalReps * 5;
+                                                let effortLabel = 'LOW', effortColor = '#38bdf8';
+                                                if (intensityScore > 300) { effortLabel = 'HIGH'; effortColor = '#ef4444'; }
+                                                else if (intensityScore > 150) { effortLabel = 'MED'; effortColor = '#fb923c'; }
+
                                                 return (
                                                     <div key={i} className="wt-hist-exercise-row">
                                                         <div className="wt-hist-ex-name-group">
@@ -747,8 +858,8 @@ export default function WorkoutTracker() {
                                                         </div>
                                                         <div className="wt-hist-ex-metrics">
                                                             <span className="wt-metrics-pill">{ex.sets.length}S</span>
-                                                            <span className="wt-metrics-pill">{maxW}kg Peak</span>
-                                                            <span className="wt-vol-pill">{Math.round(totalVol)}kg Vol</span>
+                                                            <span className="wt-metrics-pill">Peak: {maxW}kg</span>
+                                                            <span className="wt-vol-pill" style={{ color: effortColor, background: `${effortColor}15` }}>Int: {effortLabel}</span>
                                                         </div>
                                                     </div>
                                                 );
@@ -811,16 +922,16 @@ export default function WorkoutTracker() {
                                 <Card className="wt-analytics-card-sm">
                                     <div className="wt-analytics-title-group mb-6">
                                         <Calendar size={18} className="wt-accent-navy" />
-                                        <h3 className="wt-analytics-title">Weekly Load</h3>
+                                        <h3 className="wt-analytics-title">Weekly Volume Load</h3>
                                     </div>
                                     <div className="wt-chart-viewport-sm">
                                         <ResponsiveContainer width="100%" height={140}>
-                                            <BarChart data={weeklyFrequency}>
+                                            <BarChart data={weeklyVolume}>
                                                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
                                                 <XAxis dataKey="date" hide />
                                                 <YAxis hide />
-                                                <Tooltip content={<ChartTooltip unit=" S" />} />
-                                                <Bar dataKey="sessions" fill="#38bdf8" radius={[4, 4, 0, 0]} barSize={20} />
+                                                <Tooltip content={<ChartTooltip unit=" kg" />} />
+                                                <Bar dataKey="volume" fill="#38bdf8" radius={[4, 4, 0, 0]} barSize={20} />
                                             </BarChart>
                                         </ResponsiveContainer>
                                     </div>
@@ -850,17 +961,26 @@ export default function WorkoutTracker() {
                                     <h3 className="wt-analytics-title">Muscle Topology Distribution</h3>
                                 </div>
                                 <div className="wt-topology-stack">
-                                    {muscleGroupData.map(({ muscle, count }) => (
-                                        <div key={muscle} className="wt-topology-item">
-                                            <div className="wt-topology-meta">
-                                                <span className="wt-topology-name">{muscle}</span>
-                                                <span className="wt-topology-count">{count}</span>
-                                            </div>
-                                            <div className="wt-topology-bar">
-                                                <div className="wt-topology-fill" style={{ width: `${(count / (muscleGroupData[0]?.count || 1)) * 100}%` }} />
-                                            </div>
-                                        </div>
-                                    ))}
+                                    <ResponsiveContainer width="100%" height={240}>
+                                        <PieChart>
+                                            <Pie 
+                                                data={muscleGroupData} 
+                                                dataKey="count" 
+                                                nameKey="muscle" 
+                                                cx="50%" cy="50%" 
+                                                innerRadius={60} 
+                                                outerRadius={80} 
+                                                paddingAngle={5}
+                                                stroke="none"
+                                            >
+                                                {muscleGroupData.map((entry, index) => (
+                                                    <Cell key={`cell-${index}`} fill={['#38bdf8', '#1e40af', '#60a5fa', '#93c5fd', '#bfdbfe', '#dbeafe'][index % 6]} />
+                                                ))}
+                                            </Pie>
+                                            <Tooltip content={<ChartTooltip unit=" sets" />} wrapperStyle={{ background: 'rgba(0,0,0,0.8)', border: 'none', borderRadius: '8px', color: 'white' }} />
+                                            <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '11px', color: '#94a3b8', marginTop: '10px' }} />
+                                        </PieChart>
+                                    </ResponsiveContainer>
                                 </div>
                             </Card>
 
@@ -871,18 +991,21 @@ export default function WorkoutTracker() {
                                     <h3 className="wt-analytics-title">Peak System Records</h3>
                                 </div>
                                 <div className="wt-records-shelf">
-                                    {Object.entries(prs).map(([name, pr]) => (
+                                    {Object.entries(prs).map(([name, pr]) => {
+                                        const diff = pr.prev > 0 ? (((pr.weight - pr.prev) / pr.prev) * 100).toFixed(1) : 0;
+                                        return (
                                         <div key={name} className="wt-record-tag">
                                             <div className="wt-record-main">
                                                 <span className="wt-record-ex">{name}</span>
                                                 <span className="wt-record-peak">{pr.weight}<span className="wt-record-unit">KG</span></span>
                                             </div>
                                             <div className="wt-record-footer">
-                                                <div className="wt-pr-glow-label">NEW PR</div>
+                                                <div className="wt-pr-glow-label">NEW PR {diff > 0 && `(+${diff}%)`}</div>
                                                 <span className="wt-record-date">{pr.date}</span>
                                             </div>
                                         </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             </Card>
                         </>

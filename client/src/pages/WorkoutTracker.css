@@ -19,6 +19,38 @@
     flex-direction: column;
 }
 
+.wt-header-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.wt-reminder-toggle {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: #64748b;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.wt-reminder-toggle:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #f1f5f9;
+}
+
+.wt-reminder-toggle.active {
+    background: rgba(30, 64, 175, 0.1);
+    border-color: rgba(30, 64, 175, 0.3);
+    color: #38bdf8;
+    box-shadow: 0 0 15px rgba(30, 64, 175, 0.2);
+}
+
 .wt-title-gradient {
     background: linear-gradient(to right, #1e40af, #38bdf8);
     -webkit-background-clip: text;
@@ -246,9 +278,23 @@
     transition: all 0.2s;
 }
 
-.wt-delete-btn:hover {
-    background: rgba(239, 68, 68, 0.15);
-    color: #ef4444;
+.wt-delete-btn:hover, .wt-table-delete:hover, .wt-mini-delete:hover {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+}
+
+.wt-table-delete, .wt-mini-delete {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    border-radius: 6px;
+    padding: 6px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .wt-day-details-panel {
